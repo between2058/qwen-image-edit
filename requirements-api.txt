@@ -1,0 +1,26 @@
+# =============================================================================
+# Qwen Image API — Python dependencies
+#
+# NOTE: torch==2.6.0 and torchvision==0.21.0 are installed separately in
+#       the Dockerfile from the PyTorch cu126 index to ensure sm_120 support.
+#       Do NOT add them here — pip would overwrite them with CPU-only wheels.
+# =============================================================================
+
+# ── Diffusers (pinned commit — required for QwenImagePipeline / QwenImageEditPlusPipeline) ──
+git+https://github.com/huggingface/diffusers.git@973a077c6a4e7e7a7ea61a84bedd29ac24fb609a
+
+# ── Model runtime ─────────────────────────────────────────────────────────────
+transformers
+accelerate
+safetensors
+sentencepiece
+dashscope
+kernels
+
+# ── Image processing ──────────────────────────────────────────────────────────
+pillow
+
+# ── API server ────────────────────────────────────────────────────────────────
+fastapi
+uvicorn[standard]
+python-multipart
