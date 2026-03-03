@@ -278,6 +278,57 @@ docker compose logs --tail=100 qwen-image-api
 
 ---
 
+## 指定使用特定 GPU
+
+機器上有多張 GPU 時，可在 `docker-compose.yml` 的 `device_ids` 指定要使用哪一張。
+
+### 先確認 GPU 編號
+
+```bash
+nvidia-smi -L
+# GPU 0: NVIDIA RTX Pro 6000 (UUID: ...)
+# GPU 1: NVIDIA RTX Pro 6000 (UUID: ...)
+```
+
+`device_ids` 對應的就是這裡顯示的 index（從 0 起算）。
+
+### 修改 docker-compose.yml
+
+```yaml
+deploy:
+  resources:
+    reservations:
+      devices:
+        - driver: nvidia
+          device_ids: ["1"]    # ← 改這裡，"0" 第一張、"1" 第二張
+          capabilities: [gpu]
+```
+
+常見設定範例：
+
+| `device_ids` 值 | 說明 |
+|-----------------|------|
+| `["0"]` | 只使用第一張 GPU |
+| `["1"]` | 只使用第二張 GPU（目前設定）|
+| `["0", "1"]` | 同時掛載兩張（服務本身仍一次只用一張）|
+
+> **注意：** `device_ids` 和 `count` 不能同時存在，設定其中一個即可。
+
+修改後重啟服務：
+
+```bash
+docker compose up -d
+```
+
+進入容器確認 GPU 是否正確：
+
+```bash
+docker compose exec qwen-image-api nvidia-smi
+# 應只顯示指定的那張 GPU
+```
+
+---
+
 ## 目錄結構說明
 
 ```

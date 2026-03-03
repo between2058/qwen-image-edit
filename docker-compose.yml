@@ -68,9 +68,7 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              # Use "all" to expose every GPU, or pin to a specific device:
-              #   device_ids: ["0"]
-              count: 1
+              device_ids: ["1"]
               capabilities: [gpu]
 
     # Shared memory for PyTorch. 8 GB is a safe default for large diffusion models.
