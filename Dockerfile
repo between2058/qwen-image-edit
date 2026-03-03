@@ -5,7 +5,7 @@
 # CUDA toolkit    : 12.8
 # cuDNN           : 9
 # Python          : 3.10
-# PyTorch         : 2.6.0 + cu126  (first release with native sm_120 support)
+# PyTorch         : 2.7.0 + cu128  (first stable release with native sm_120 support)
 #
 # Endpoints:
 #   POST /text2img      — Text → Image  (Qwen-Image-2512)
@@ -98,16 +98,17 @@ RUN update-alternatives --install /usr/bin/python  python  /usr/bin/python3.10 1
 WORKDIR /app
 
 # =============================================================================
-# STEP 1 — PyTorch 2.6 with CUDA 12.6 wheels
+# STEP 1 — PyTorch 2.7+ with CUDA 12.8 wheels
 #
-# cu126 wheels are forward-compatible with the CUDA 12.8 runtime.
-# PyTorch 2.6 is the first stable release that includes sm_120 (Blackwell)
-# kernels compiled into the distributed binaries.
+# PyTorch 2.7.0 (released April 2025) is the first stable release that ships
+# sm_120 (Blackwell) kernels in the distributed cu128 binaries.
+# Earlier versions (≤ 2.6.0 / cu126) only support up to sm_90 and will raise:
+#   RuntimeError: CUDA error: no kernel image is available for execution on the device
 # =============================================================================
 RUN pip install --no-cache-dir \
-    torch==2.6.0 \
-    torchvision==0.21.0 \
-    --index-url https://download.pytorch.org/whl/cu126
+    torch==2.7.0 \
+    torchvision==0.22.0 \
+    --index-url https://download.pytorch.org/whl/cu128
 
 # =============================================================================
 # STEP 2 — Application dependencies
