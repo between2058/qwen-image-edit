@@ -51,6 +51,11 @@ services:
       # new models are downloaded into the same host directory.
       - /pegaai:/notebooks:rw
 
+      # ── Persistent logs ───────────────────────────────────────────────────
+      # app.log / access.log / uvicorn.log, rotated daily, kept 14 days.
+      # View latest: tail -f ./logs/app.log
+      - ./logs:/app/logs
+
       # ── Optional: expose generated outputs to the host ───────────────────
       # Uncomment to access result images directly on the host.
       # - ./outputs:/app/outputs
