@@ -10,6 +10,7 @@ import torch
 import tempfile
 import logging
 import logging.handlers
+import datetime
 import numpy as np
 from typing import Dict, List, Literal, Optional
 from PIL import Image
@@ -31,9 +32,16 @@ from diffusers import QwenImagePipeline, QwenImageEditPlusPipeline
 LOG_DIR = "/app/logs"
 os.makedirs(LOG_DIR, exist_ok=True)
 
-_log_fmt = logging.Formatter(
-    "%(asctime)s [%(levelname)-8s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
+_TZ_TAIPEI = datetime.timezone(datetime.timedelta(hours=8))
+
+class _TaipeiFormatter(logging.Formatter):
+    """Formatter that always outputs UTC+8 (Taiwan) time, regardless of system TZ."""
+    def formatTime(self, record, datefmt=None):
+        dt = datetime.datetime.fromtimestamp(record.created, tz=_TZ_TAIPEI)
+        return dt.strftime(datefmt or "%Y-%m-%d %H:%M:%S")
+
+_log_fmt = _TaipeiFormatter(
+    "%(asctime)s [%(levelname)-8s] %(message)s"
 )
 
 def _make_rotating_handler(filename: str) -> logging.Handler:
