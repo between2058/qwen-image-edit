@@ -61,6 +61,7 @@ services:
       # - ./outputs:/app/outputs
 
     environment:
+      - TZ=Asia/Taipei
       # HuggingFace will look here first before downloading anything.
       - HF_HOME=/notebooks/model_team/huggingface_cache
       - TRANSFORMERS_CACHE=/notebooks/model_team/huggingface_cache
